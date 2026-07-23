@@ -1,0 +1,66 @@
+Step 1: Create the IAM Role to Switch Into
+
+Go to IAM > Roles > Create Role.
+
+Choose “Another AWS account” or same account as trusted entity.
+
+Enter the Account ID where the IAM user exists (or your own account ID if same account).
+
+Attach the permissions policies you want this role to have.
+
+Give the role a name (e.g., test).
+
+Create the role and give any permission 
+
+
+step -2 create IAM user to login
+
+
+Step 3: Add Permission to IAM User to Assume the Role
+Attach a policy to your IAM user like this (replace role ARN):
+
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+     
+      "Resource": "arn:aws:iam::158394344567:role/test",  #admin
+      "Resource": "arn:aws:iam::234539439149:role/prod", #admin
+
+
+    }
+  ]
+}
+
+
+Step 4: Use “Switch Role” in AWS Console
+Log in as your IAM user.
+
+Click your username dropdown (top right).
+
+Click “Switch Role”.
+
+Enter:
+
+Account ID (where role exists)
+
+Role name (e.g., test)
+
+Optional display name/color
+
+Click Switch Role.
+
+You’re now acting as the role with its permissions.
+
+
+
+Step 5: Switch Back
+Click your username dropdown.
+
+Click “Back to <your-user>” to return.
+
+
+Switch role concept use for multiple accounts login

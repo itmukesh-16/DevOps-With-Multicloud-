@@ -1,0 +1,30 @@
+User
+ │
+ │ HTTPS request:
+ │ https://myshop.com/mobile
+ ▼
++-----------------------------+
+| NLB                         |
+| Static IP: 175.4.5.6        |
+| Layer 4 (TCP)               |
++-----------------------------+
+             │
+             │ TCP Forward
+             ▼
++-----------------------------+
+| ALB                         |
+| Dynamic IPs                 |
+| Layer 7 (HTTP/HTTPS)        |
++-----------------------------+
+             │
+     Reads URL path
+             │
+     /mobile        /fashion
+        │               │
+        ▼               ▼
+ Target Group A    Target Group B
+    │     │           │      │
+    ▼     ▼           ▼      ▼
+Server1 Server2   Server3 Server4
+
+

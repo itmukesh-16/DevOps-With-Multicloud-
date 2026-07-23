@@ -1,0 +1,77 @@
+##### Linux commands ######
+
+by default we can login to server with ec2-user 
+
+ec2-user by default create when you launch a server
+
+any Linux server root user will be created who's having admin access 
+
+
+sudo su -   #to switch root user 
+
+su - <username>
+ex: su - ec2-user  
+
+touch #create a file 
+ex: touch file-1
+
+ls   #list objects 
+
+
+vi #create file and open file editor we can add any content 
+
+vi file-1  #file-1 cerates and open file-1 editor to add some content 
+
+:wq!    #to save and quit file 
+
+:q!     #quit file without save the data 
+
+chmod   # to give file permission 
+
+4  read
+2  write 
+1 execute 
+
+chmod400 file-1 
+
+file-1 read permission granted to user 
+
+yum #package ,anager tool for amazon Linux 
+amazon Linux  packages installation 
+
+ex: if you want to install python 
+
+yum install python3
+
+yum install nginx #to install web server process 
+
+#by default nginx process run on 80 port 
+
+systemctl start nginx # to start nginx 
+
+systemctl status nginx # to check status 
+
+systemctl stop nginx # to stop
+
+systemctl restart nginx # to restart 
+
+ss -tuln  # to know active ports inside the server
+
+
+cd #change directory  
+
+mkdir #create directory (folder)
+
+mv    #to move a file 
+
+
+ex:  mv index.html /test    #file index.html is move to test directory 
+
+
+
+
+
+
+
+
+
