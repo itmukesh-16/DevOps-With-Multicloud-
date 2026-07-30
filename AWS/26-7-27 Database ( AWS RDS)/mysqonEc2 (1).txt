@@ -1,0 +1,108 @@
+-------- DB on ec2--------------------
+
+
+#"Installing MySQL server  on Amazon Linux 2023"  
+
+sudo dnf update
+sudo wget https://dev.mysql.com/get/mysql80-community-release-el9-4.noarch.rpm
+sudo dnf install mysql80-community-release-el9-4.noarch.rpm
+sudo dnf install mysql-community-server
+
+mysql -V
+
+sudo systemctl start mysqld    #Starts MySQL service
+sudo systemctl enable mysqld   #Enabled mySQL service to restart on bot
+systemctl status mysqld        #Check MySQL service running status
+
+
+#Get Initial Password
+
+sudo grep 'temporary password' /var/log/mysqld.log
+
+note temp passwd 3F3ot=7b!Ig)
+
+connect MySQL and run below command 
+
+MySQL -u root -p 
+
+give temp password ladter you can run below command for custm password
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Passwd@12';
+FLUSH PRIVILEGES;
+mysql -u root -p 
+#create sample data base 
+
+CREATE DATABASE IF NOT EXISTS demodb;
+
+SHOW DATABASES;
+
+CREATE TABLE demodb.persons (
+    PersonID int,
+    LastName varchar(255),
+    FirstName varchar(255),
+    Address varchar(255),
+    City varchar(255)
+);
+
+USE DBName;
+
+give demodb
+
+SHOW TABLES;
+
+
+
+
+
+
+
+========================= docker ==============
+
+
+
+Run MySQL Docker Container
+Start a MySQL container:
+
+
+docker run --name my-mysql -e MYSQL_ROOT_PASSWORD=Akki@123 -e MYSQL_DATABASE=testdb -p 3306:3306 -d mysql:8.0
+
+--name my-mysql: Names the container.
+-e MYSQL_ROOT_PASSWORD=rootpassword: Sets the root password.
+-e MYSQL_DATABASE=testdb: Creates a database named testdb.
+-p 3306:3306: Exposes the MySQL port on the host.
+-d mysql:8.0: Runs the MySQL 8.0 image in detached mode.
+5. Access the MySQL Database
+Use the mysql CLI tool inside the container or connect from the host machine.
+
+a. Inside the Container
+
+docker exec -it my-mysql mysql -uroot -prootpassword
+
+Switch to the testdb database:
+
+
+USE testdb;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100)
+);
+
+#Insert records:
+
+
+INSERT INTO users (name, email) VALUES ('John Doe', 'john@example.com');
+INSERT INTO users (name, email) VALUES ('Jane Smith', 'jane@example.com');
+
+Query the records:
+
+
+SELECT * FROM users;
+
+
+===== connect to rds ======
+
+mysql -h lambda-s3.c7s0iqse4usm.ap-south-1.rds.amazonaws.com -u admin -P 3306 -psrivardhan1211
+
+
