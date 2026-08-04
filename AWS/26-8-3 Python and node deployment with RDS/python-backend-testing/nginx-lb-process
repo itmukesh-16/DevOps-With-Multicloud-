@@ -1,0 +1,124 @@
+1. Default (Round Robin)
+
+Requests are distributed evenly, one by one.
+
+upstream backend_servers {
+    server 172.31.18.89:5000;
+    server 172.31.18.90:5000;
+    server 172.31.18.91:5000;
+}
+
+server {
+    listen 80;
+    server_name yourdomain.com;
+
+    location / {
+        proxy_pass http://backend_servers;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+
+✅ Best for: equal servers, simple setups
+
+2. Least Connections
+
+Sends traffic to the server with the fewest active connections.
+
+upstream backend_servers {
+    least_conn;
+    server 172.31.18.89:5000;
+    server 172.31.18.90:5000;
+    server 172.31.18.91:5000;
+}
+
+
+✅ Best for: long-running requests, uneven load
+
+3. IP Hash (Session Persistence)
+
+Same client IP → same backend (sticky sessions).
+
+upstream backend_servers {
+    ip_hash;
+    server 172.31.18.89:5000;
+    server 172.31.18.90:5000;
+}
+
+
+✅ Best for: apps with in-memory sessions
+❌ Not ideal behind NAT / mobile users
+
+4. Hash (Advanced / Sticky by Key)
+
+Distribute based on a specific value (cookie, header, etc.).
+
+upstream backend_servers {
+    hash $request_uri consistent;
+    server 172.31.18.89:5000;
+    server 172.31.18.90:5000;
+}
+
+
+Other useful hash keys:
+
+hash $remote_addr;
+hash $http_user_agent;
+hash $cookie_sessionid;
+
+
+✅ Best for: predictable routing, cache-friendly apps
+
+5. Weighted Load Balancing
+
+Send more traffic to stronger servers.
+
+upstream backend_servers {
+    server 172.31.18.89:5000 weight=3;
+    server 172.31.18.90:5000 weight=1;
+}
+
+
+Meaning:
+
+.89 gets 75% traffic
+
+.90 gets 25% traffic
+
+6. Failover & Health Control
+
+Mark servers as backup or limit failures.
+
+upstream backend_servers {
+    server 172.31.18.89:5000 max_fails=3 fail_timeout=30s;
+    server 172.31.18.90:5000 max_fails=3 fail_timeout=30s;
+    server 172.31.18.91:5000 backup;
+}
+
+
+backup → used only if others fail
+
+max_fails → retries before marking down
+
+After Changes
+
+Always test and reload:
+
+sudo nginx -t
+sudo systemctl reload nginx
+
+Which one should you use?
+
+Stateless API → least_conn
+
+Login/session app → ip_hash or hash cookie
+
+Different server sizes → weight
+
+Simple setup → default round-robin
+

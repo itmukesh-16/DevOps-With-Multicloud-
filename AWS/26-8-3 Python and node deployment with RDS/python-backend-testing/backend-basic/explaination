@@ -1,0 +1,122 @@
+1️⃣ Import Libraries
+from flask import Flask, jsonify
+import pymysql
+
+
+Flask: Python framework to build web APIs.
+
+jsonify: Converts Python data (like dicts/lists) into JSON responses for HTTP requests.
+
+pymysql: Python library to connect to a MySQL database (in your case, AWS RDS).
+
+2️⃣ Create Flask App
+app = Flask(__name__)
+
+
+Initializes the Flask application.
+
+app is the main object that handles HTTP routes.
+
+3️⃣ Database Configuration
+RDS_HOST = 'database-1.c8lweogi44to.us-east-1.rds.amazonaws.com'  # master endpoint
+RDS_USER = 'admin'
+RDS_PASSWORD = 'cloud123'
+RDS_DB_NAME = 'dev'
+TABLE_NAME = 'users'
+
+
+These variables store the RDS master database connection details.
+
+TABLE_NAME is the table you want to query (users).
+
+Note: You are using the master/writer endpoint, not a reader endpoint. That means you can read and write data here.
+
+4️⃣ GET API Route to Fetch Users
+@app.route('/users', methods=['GET'])
+def get_users():
+
+
+This defines a GET API at /users.
+
+When someone makes a GET request (like via curl or browser), this function runs.
+
+4a. Connect to RDS
+connection = pymysql.connect(
+    host=RDS_HOST,
+    user=RDS_USER,
+    password=RDS_PASSWORD,
+    database=RDS_DB_NAME,
+    cursorclass=pymysql.cursors.DictCursor  # rows as dict
+)
+
+
+Opens a connection to your RDS database.
+
+Cursor ensures each row returned is a Python dictionary (column names → keys).
+
+4b. Execute SQL Query
+with connection.cursor() as cursor:
+    cursor.execute(f"SELECT * FROM {TABLE_NAME} LIMIT 10;")
+    users = cursor.fetchall()
+
+
+with connection.cursor() as cursor: Opens a cursor to run SQL queries.
+
+SELECT * FROM users LIMIT 10: Fetches the first 10 rows from your users table.
+
+cursor.fetchall(): Returns all rows as a list of dictionaries.
+
+Example return from users:
+
+[
+    {"id": 1, "name": "John Doe", "email": "john@example.com"},
+    {"id": 2, "name": "Alice Smith", "email": "alice@example.com"}
+]
+
+4c. Return JSON Response
+return jsonify(users)
+
+
+Converts the Python list of dictionaries into JSON.
+
+This is what the client (browser, curl, Postman) will see.
+
+4d. Error Handling
+except Exception as e:
+    return jsonify({"error": str(e)}), 500
+
+
+If anything goes wrong (like DB connection fails), return a 500 error with the error message.
+
+4e. Close Connection
+finally:
+    if 'connection' in locals():
+        connection.close()
+
+
+Ensures the database connection is closed, even if there’s an error.
+
+Good practice to avoid hanging connections.
+
+5️⃣ Health Check Route
+@app.route('/')
+def index():
+    return "RDS Master API running"
+
+
+Basic GET endpoint at / to check if the Flask app is running.
+
+You can visit http://<your-ec2-ip>:5000/ to see the message.
+
+6️⃣ Entry Point
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
+
+Runs the Flask app when you execute the script.
+
+host='0.0.0.0': Makes the API accessible from outside the EC2 instance.
+
+port=5000: The port where the API listens.
+
+debug=True: Enables debugging (auto-reload and detailed error messages).
