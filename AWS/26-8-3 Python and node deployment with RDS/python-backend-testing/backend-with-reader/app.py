@@ -4,7 +4,7 @@ import mysql.connector
 from mysql.connector import Error
 
 app = Flask(__name__)
-CORS(app) #enable CORS for all routes
+CORS(app)
 
 # =========================
 # DATABASE CONFIG
@@ -12,17 +12,17 @@ CORS(app) #enable CORS for all routes
 
 # ✍️ Writer (Master)
 db_write_config = {
-    'host': 'database-1.c6xkgac6c5dq.us-east-1.rds.amazonaws.com',
+    'host': 'database-1.cdwg0suic5ew.us-east-1.rds.amazonaws.com',
     'user': 'admin',
-    'password': 'AdminMukesh',
+    'password': 'Cloud123',
     'database': 'dev'
 }
 
 # 👀 Reader (Read Replica Endpoint)
 db_read_config = {
-    'host': 'database-1.c6xkgac6c5dq.us-east-1.rds.amazonaws.com',
+    'host': 'reader.cdwg0suic5ew.us-east-1.rds.amazonaws.com',
     'user': 'admin',
-    'password': 'AdminMukesh',
+    'password': 'Cloud123',
     'database': 'dev'
 }
 

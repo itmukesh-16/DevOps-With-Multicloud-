@@ -6,9 +6,3 @@ CREATE TABLE users (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE
 );
-
-INSERT INTO users (name, email) VALUES 
-('ram', 'ram@example.com'),
-('Alice Smith', 'alice@example.com'),
-('Bob Johnson', 'bob@example.com'),
-('Eve Adams', 'eve@example.com');
