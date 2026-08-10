@@ -125,43 +125,44 @@
 
 
     // Load Users
-    function loadUsers() {
-      const table = document.getElementById("userTable");
+   // Load Users
+function loadUsers() {
+  const table = document.getElementById("userTable");
 
-      // Reset table
-      table.innerHTML = `
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Actions</th>
-        </tr>
-      `;
+  // Reset table
+  table.innerHTML = `
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Actions</th>
+    </tr>
+  `;
 
-      fetch(`${backendIP}/users`)
-        .then(res => res.json())
-        .then(users => {
-          users.forEach(user => {
-            const row = table.insertRow();
+  fetch(`${backendIP}/users`)
+    .then(res => res.json())
+    .then(response => {
+      const users = response.data;   // ✅ unwrap the array from the response object
+      users.forEach(user => {
+        const row = table.insertRow();
 
-            row.insertCell(0).innerText = user.id;
-            row.insertCell(1).innerText = user.name;
-            row.insertCell(2).innerText = user.email;
+        row.insertCell(0).innerText = user.id;
+        row.insertCell(1).innerText = user.name;
+        row.insertCell(2).innerText = user.email;
 
-            const actionCell = row.insertCell(3);
+        const actionCell = row.insertCell(3);
 
-            const deleteBtn = document.createElement("button");
-            deleteBtn.innerText = "Delete";
-            deleteBtn.className = "delete-btn";
+        const deleteBtn = document.createElement("button");
+        deleteBtn.innerText = "Delete";
+        deleteBtn.className = "delete-btn";
 
-            deleteBtn.onclick = () => deleteUser(user.id);
+        deleteBtn.onclick = () => deleteUser(user.id);
 
-            actionCell.appendChild(deleteBtn);
-          });
-        })
-        .catch(err => console.error(err));
-    }
-
+        actionCell.appendChild(deleteBtn);
+      });
+    })
+    .catch(err => console.error(err));
+}
     // Delete User
     function deleteUser(id) {
       if (!confirm("Delete this user?")) return;

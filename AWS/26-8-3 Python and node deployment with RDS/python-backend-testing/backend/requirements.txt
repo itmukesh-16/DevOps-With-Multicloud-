@@ -1,6 +1,7 @@
-Flask
+flask
 flask-cors
 mysql-connector-python
 redis
 cryptography
 pymysql
+mariadb105
